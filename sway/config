@@ -1,8 +1,6 @@
-# Default config for sway
-#
-# Copy this to ~/.config/sway/config and edit it to your liking.
-#
 # Read `man 5 sway` for a complete reference.
+
+include catpuccin-mocha
 
 ### Variables
 #
@@ -56,6 +54,7 @@ input "type:keyboard" {
 	xkb_layout ch
 	xkb_variant fr
 }
+
 #
 # You can get the names of your inputs by running: swaymsg -t get_inputs
 # Read `man 5 sway-input` for more information about this section.
@@ -224,4 +223,12 @@ bindsym $mod+r mode "resize"
 
 exec_always killall yambar; yambar
 
-include @sysconfdir@/sway/config.d/*
+# Colours:
+client.focused           $lavender $base $text  $rosewater $lavender
+client.focused_inactive  $overlay0 $base $text  $rosewater $overlay0
+client.unfocused         $overlay0 $base $text  $rosewater $overlay0
+client.urgent            $peach    $base $peach $overlay0  $peach
+client.placeholder       $overlay0 $base $text  $overlay0  $overlay0
+client.background        $base
+
+include ~/.config/sway/config.d/*
