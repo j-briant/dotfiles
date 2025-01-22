@@ -3,47 +3,46 @@
 include catpuccin-mocha
 
 ### Variables
-#
 # Logo key. Use Mod1 for Alt.
 set $mod Mod4
+
 # Home row direction keys, like vim
 set $left h
 set $down j
 set $up k
 set $right l
-# Your preferred terminal emulator
+
+# Terminal emulator
 set $term foot
-# Your preferred application launcher
+
+# Application launcher
 set $menu fuzzel
 
+# Floating apps
+for_window [app_id="pavucontrol"] floating enable 
+
+# Inter app gaps
+gaps outer 5
+
 ### Output configuration
-#
-# Default wallpaper (more resolutions are available in @datadir@/backgrounds/sway/)
-output * bg ~/Wallpapers/purple_mountains.png fill
-#
-# Example configuration:
-#
-#   output HDMI-A-1 resolution 1920x1080 position 1920,0
-#
 # You can get the names of your outputs by running: swaymsg -t get_outputs
+output * bg ~/Wallpapers/purple_mountains.png fill
+
+# Example configuration:
+output "AU Optronics 0x133D Unknown" resolution 1920x1080 position 1920,0
+
 
 ### Idle configuration
-#
-# Example configuration:
-#
 exec_always swayidle -w \
          timeout 300 'waylock' \
          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-         before-sleep 'swaylock'
-#
+         before-sleep 'waylock'
+
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
 # resumed. It will also lock your screen before your computer goes to sleep.
 
 ### Input configuration
-#
-# Example configuration:
-#
 input "type:touchpad" {
 	dwt enabled
 	tap enabled
@@ -55,21 +54,18 @@ input "type:keyboard" {
 	xkb_variant fr
 }
 
-#
 # You can get the names of your inputs by running: swaymsg -t get_inputs
 # Read `man 5 sway-input` for more information about this section.
 
 ### Key bindings
-#
 # Basics:
-#
     # Start a terminal
     bindsym $mod+Return exec $term
 
     # Kill focused window
-    bindsym $mod+Shift+q kill
+    bindsym $mod+q kill
 
-    # Start your launcher
+    # Start launcher
     bindsym $mod+d exec $menu
 
     # Drag floating windows by holding down $mod and left mouse button.
@@ -83,16 +79,15 @@ input "type:keyboard" {
     bindsym $mod+Shift+c reload
 
     # Exit sway (logs you out of your Wayland session)
-    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+    bindsym $mod+Shift+e exec swaynag -t warning -m 'want to exit sway?' -B 'Yes, exit sway' 'swaymsg exit'
 
     # Lock session
     bindsym $mod+Alt+l exec waylock
 
     # Logout menu
     bindsym $mod+Escape exec wlogout
-#
+
 # Moving around:
-#
     # Move your focus around
     bindsym $mod+$left focus left
     bindsym $mod+$down focus down
@@ -114,9 +109,8 @@ input "type:keyboard" {
     bindsym $mod+Shift+Down move down
     bindsym $mod+Shift+Up move up
     bindsym $mod+Shift+Right move right
-#
+
 # Workspaces:
-#
     # Switch to workspace
     bindsym $mod+1 workspace number 1
     bindsym $mod+2 workspace number 2
@@ -141,9 +135,14 @@ input "type:keyboard" {
     bindsym $mod+Shift+0 move container to workspace number 10
     # Note: workspaces can have any name you want, not just numbers.
     # We just use 1-10 as the default.
-#
+
+    bindsym $mod+Tab workspace next
+    bindsym $mod+Shift+Tab workspace prev
+
+    # Close workspace
+    bindsym $mod+shift+q [workspace=__focused__] kill
+
 # Layout stuff:
-#
     # You can "split" the current object of your focus with
     # $mod+b or $mod+v, for horizontal and vertical splits
     # respectively.
@@ -166,9 +165,8 @@ input "type:keyboard" {
 
     # Move focus to the parent container
     bindsym $mod+a focus parent
-#
+
 # Scratchpad:
-#
     # Sway has a "scratchpad", which is a bag of holding for windows.
     # You can send windows there and get them back later.
 
@@ -178,9 +176,8 @@ input "type:keyboard" {
     # Show the next scratchpad window or hide the focused scratchpad window.
     # If there are multiple scratchpad windows, this command cycles through them.
     bindsym $mod+minus scratchpad show
-#
+
 # Resizing containers:
-#
 mode "resize" {
     # left will shrink the containers width
     # right will grow the containers width
@@ -202,9 +199,8 @@ mode "resize" {
     bindsym Escape mode "default"
 }
 bindsym $mod+r mode "resize"
-#
+
 # Utilities:
-#
     # Special keys to adjust volume via PulseAudio
     bindsym --locked XF86AudioMute exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
     bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume \@DEFAULT_SINK@ -5%
@@ -216,12 +212,15 @@ bindsym $mod+r mode "resize"
     # Special key to take a screenshot with grim
     bindsym Print exec grim
 
-#
 # Status Bar:
-#
 # Read `man 5 sway-bar` for more information about this section.
 
-exec_always killall yambar; yambar
+exec_always sh -c "killall yambar; yambar &"
+
+# swaync
+#set $flavor mocha
+#set $version v0.2.3
+#exec_always if [ ! -f ~/.config/swaync/style.css ]; then $(mkdir -p ~/.config/swaync && curl -L https://github.com/catppuccin/swaync/releases/download/$version/$flavor.css -o ~/.config/swaync/style.css); fi
 
 # Colours:
 client.focused           $lavender $base $text  $rosewater $lavender
